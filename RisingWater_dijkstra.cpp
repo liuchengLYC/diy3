@@ -30,8 +30,3 @@ class Solution {
         return grid[m - 1][n - 1];
     }
 };
-int main() {
-    Solution s;
-    vector<vector<int>> grid = {{0, 1, 2}, {5, 100, 3}, {6, 7, 8}};
-    cout << s.swimInWater(grid) << endl;
-}
