@@ -32,25 +32,28 @@ class Solution {
   public:
     int swimInWater(vector<vector<int>> &grid) {
         int n = grid.size();
-        vector<array<int, 3>> edges;
+        using pii = pair<int, int>;
+        using ipii = pair<int, pii>;
+        vector<ipii> edges;
         auto id = [&](int x, int y) { return x * n + y; };
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (i + 1 < n) {
                     int w = max(grid[i][j], grid[i + 1][j]);
-                    edges.push_back({w, id(i, j), id(i + 1, j)});
+                    edges.push_back({w, {id(i, j), id(i + 1, j)}});
                 }
                 if (j + 1 < n) {
                     int w = max(grid[i][j], grid[i][j + 1]);
-                    edges.push_back({w, id(i, j), id(i, j + 1)});
+                    edges.push_back({w, {id(i, j), id(i, j + 1)}});
                 }
             }
         }
-        sort(edges.begin(), edges.end());
+        sort(edges.begin(), edges.end(),
+             [](auto &x, auto &y) { return x.first < y.first; });
         DSU dsu(n * n);
         for (auto &e : edges) {
-            int w = e[0], u = e[1], v = e[2];
+            int w = e.first, u = e.second.first, v = e.second.second;
             dsu.unite(u, v);
             if (dsu.find(0) == dsu.find(n * n - 1)) {
                 return w;
